@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+data/
+others/
+results/
+dataset/
+
+nohup.out
+educational_resource_integration/chroma_db/
