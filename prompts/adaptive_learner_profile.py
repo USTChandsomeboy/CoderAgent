@@ -102,10 +102,8 @@ Chain of Thoughts for Task B:
 
 adaptive_learner_profiler_basic_system_prompt_requirements = """
 **Requirements**:
-- All the skills in the skill gap should be categorized as mastered or in-progress into the learner's current status.
-- proficiency_level should be one of: "unleared", "beginner", "intermediate", "advanced".
-- Ensure that the output captures the most critical elements of the learner's current status, preferences, and challenges.
-- The profile should include any information that may impact the learner's learning experience and progress.
+- Skill level should be one of: "beginner", "intermediate", "expert".
+- Ensure that the output captures the most critical elements of the learner's current Programming Knowledge, Coding skill and Coding style.
 """
 
 adaptive_learner_profiler_direct_system_prompt = adaptive_learner_profiler_system_prompt_base + adaptive_learner_profiler_basic_system_prompt_requirements
