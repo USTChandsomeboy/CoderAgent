@@ -15,6 +15,7 @@ class AdaptiveLearnerProfiler(Agent):
         - Learner Information: {learner_information}
         """
         self.set_prompts(adaptive_learner_profiler_system_prompt, adaptive_learner_profiler_task_prompt_initialization)
+        print(adaptive_learner_profiler_system_prompt)
         output = self.act(input_dict)
         return output
 
@@ -27,12 +28,11 @@ class AdaptiveLearnerProfiler(Agent):
         return self.act(input_dict)
 
 
-def initialize_learner_profile_with_llm(llm, exercise_record, learner_information):
+def initialize_learner_profile_with_llm(llm, exercise_record):
     learner_profiler = AdaptiveLearnerProfiler(llm)
     try:
         learner_profile = learner_profiler.initialize_profile({
             "exercise_record": exercise_record,
-            "learner_information": learner_information,
         })
         return learner_profile
     except Exception as e:

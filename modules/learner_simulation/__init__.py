@@ -1,1 +1,1 @@
-from learner_simulation import CodeGeneration, generate_first_code_with_llm, update_code_with_llm
+from .learner_simulation import CodeGeneration, generate_first_code_with_llm, update_code_with_llm

@@ -14,6 +14,8 @@ class CodeGeneration(Agent):
         - Question Information: {question_information}
         """
         self.set_prompts(code_generation_system_prompt, code_generation_task_prompt_first)
+        print(code_generation_system_prompt)
+        print(code_generation_task_prompt_first)
         output = self.act(input_dict)
         return output
 
@@ -28,23 +30,25 @@ class CodeGeneration(Agent):
         return self.act(input_dict)
 
 
-def generate_first_code_with_llm(llm, learner_profile, question_information):
+def generate_first_code_with_llm(llm, learner_profile, question_information, exercise_records):
     code_generater= CodeGeneration(llm)
     try:
         first_code = code_generater.generate_first_code({
             "learner_profile": learner_profile,
             "question_information": question_information,
+            "exercise_records": exercise_records,
         })
         return first_code
     except Exception as e:
         raise Exception(str(e))
 
-def update_code_with_llm(llm, learner_profile, question_information, code_records, error_information):
+def update_code_with_llm(llm, learner_profile, question_information, exercise_records, code_records, error_information):
     code_generater = CodeGeneration(llm)
     try:
         update_code = code_generater.code_update({
             "learner_profile": learner_profile,
             "question_information": question_information,
+            "exercise_records": exercise_records,
             "code_records": code_records,
             "error_information": error_information,
         })

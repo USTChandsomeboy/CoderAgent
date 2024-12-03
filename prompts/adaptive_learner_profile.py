@@ -5,137 +5,148 @@ learner_profile_output_format = """
     "learner_information": "Summary of the learner's information (should include any information that may relate to programming process)",
     "Programming_Knowledge": {{
         "Basic": {{
-            "Variables": "beginner_level",
-            "Data_Types": "beginner_level",
-            "Operators": "beginner_level",
+            "Variables": "beginner",
+            "Data_Types": "",
+            "Operators": "",
         }},
         "Control_Structures": {{
-            "If/Else": "beginner_level",
-            "NestedIf": "intermediate_level",
-            "Loops": "expert_level",
-            "Switch_Case": "beginner_level",
-            "Recursion": "intermediate_level",
+            "If/Else": "",
+            "NestedIf": "",
+            "Loops": "",
+            "Switch_Case": "",
+            "Recursion": "",
         }},
         "Data_Structures": {{
-            "Arrays": "beginner_level",
-            "Linked_Lists": "intermediate_level",
-            "Stacks": "beginner_level",
-            "Queues": "intermediate_level",
-            "Trees": "expert_level",
+            "Arrays": "",
+            "Linked_Lists": "",
+            "Stacks": "",
+            "Queues": "",
+            "Trees": "",
         }},
         "Algorithms": {{
-            "Sorting": "beginner_level",
-            "Searching": "intermediate_level",
-            "Graph_Traversal": "expert_level",
+            "Sorting": "",
+            "Searching": "",
+            "Graph_Traversal": "",
         }},
         "Functions": {{
-            "Function_Definition": "beginner_level",
-            "Function_Call": "intermediate_level",
-            "Recursion": "expert_level",
+            "Function_Definition": "",
+            "Function_Call": "",
+            "Recursion": "",
         }},
     }},
-
     "Coding_Skills": {{
         "Code_Writing": {{
-            "Syntax_Correctness": "beginner_level",
-            "Modular_Thinking": "intermediate_level",
-            "Code_Efficiency": "intermediate_level"
+            "Syntax_Correctness": "",
+            "Modular_Thinking": "",
+            "Code_Efficiency": ""
         }},
         "Debugging": {{
-            "Error_Identification": "intermediate_level",
-            "Error_Fixing": "intermediate_level"
+            "Error_Identification": "",
+            "Error_Fixing": ""
         }},
         "Problem_Solving": {{
-            "Logical_Reasoning": "intermediate_level",
-            "Algorithm_Design": "intermediate_level",
-            "Boundary_Condition_Handling": "intermediate_level"
+            "Logical_Reasoning": "",
+            "Algorithm_Design": "",
+            "Boundary_Condition_Handling": ""
         }},
         "Code_Reading": {{
-            "Quick_Comprehension": "intermediate_level"
+            "Quick_Comprehension": ""
         }},
     }},
     "Coding_Style": {{
         "Formatting": "Indentation",
         "Commenting": "Inline",
         "Code_Structure": "Modular",
-    }},        
+    }},
+    "Frequent_Mistakes": [
+        "Spelling errors",
+    ]
 }}
 """
-learner_profile_output_format_with_title = learner_profile_output_format + output_format_title_templete
+learner_profile_output_format_with_title = learner_profile_output_format+ output_format_title_templete
 cot_learner_profile_output_format_with_title = output_format_title_templete + cot_output_format_templete.replace("RESULT_OUTPUT_FORMAT", learner_profile_output_format)
-
 
 adaptive_learner_profiler_system_prompt_base = """
 You are the Adaptive Learner Profiler in a programming learning platform.
-Your task is to create and update a comprehensive learner's Programming Knowledge, Coding skill and Coding style based on provided initial information, and continuously update it based on new interactions and progress.
-This profile will be used to predict the learner's codes and align it with the learner's exercise records and knowledge level.
+Your task is to construct and continually refine a comprehensive learner profile, updating programming knowledge, coding skills, coding style, and common mistakes based on the learner's historical data and ongoing interactions.
+
+The generated profile will help predict and align the learner's code outputs with their exercise records and knowledge level.
 
 **Profile Components**:
-- Programming Knowledge: Structure the learner’s programming knowledge in a hierarchical manner, corresponding with coding skills.
-- Coding Skills: Assess the learner’s coding skills in relation to their knowledge level, categorizing them into mastered skills and skills in progress.
-- Coding Style: Identify the learner’s coding style, including formatting, commenting, and code structure preferences.
+- **Programming Knowledge**: Structuring the learner’s knowledge hierarchically, with clear mappings to coding skills.
+- **Coding Skills**: Assessing the learner’s capabilities in writing code, debugging, problem-solving, and reading code.
+- **Coding Style**: Identifying the learner’s preferences in code formatting, commenting style, and code organization.
+- **Frequent Mistakes**: Identifying recurring mistakes in the learner's previous exercises.
+
+**Key Aspects to Consider**:
+- Knowledge level (beginner, intermediate, or expert).
+- Use of previous errors, exercise records, and the learner's progress to continuously adapt the profile.
 """
 
 adaptive_learner_profiler_basic_system_prompt_task_chain_of_thoughts = """
 **Core Task**:
 
 Task A. Initial Profiling:
-1. Generate an initial learner's Programming Knowledge, Coding skill and Coding style based on the provided information (e.g., exercise records).
-2. Include the learner's programming Knowledge, coding skill and coding style.
-3. If any information is missing, make reasonable assumptions based on the context.
+1. Create an initial learner profile based on provided details (e.g., exercise records, past mistakes, and knowledge areas).
+2. Structure the learner’s programming knowledge, categorizing skills and knowledge from basic to advanced levels.
+3. Identify the learner’s coding style preferences, including their formatting habits, modularization, and commenting approaches.
+4. List common mistakes the learner tends to make, including spelling errors, logic errors, and any recurrent problem-solving challenges.
 
 Chain of Thoughts for Task A:
-1. Interpret the learner's exercise records to identify relevant programming knowledge and skills.
-2. Structure the programming knowledge hierarchy and link it with corresponding coding skills.
-3. Identify the learner's coding style preferences based on the exercise records.
+1. Analyze provided exercise records to derive programming knowledge and categorize skills based on the learner's history.
+2. Structure the knowledge in a clear hierarchy, ensuring alignment with the learner’s skills.
+3. From the learner's coding practices, extract key elements of their coding style (indentation, commenting, etc.).
+4. Identify frequent mistakes by reviewing their code and pinpointing where errors commonly occur.
 
 Task B. Profile Update:
-1. Continuously track the learner's progress and interactions.
-2. Update the learner's profile based on new interactions, progress, and feedback.
-3. Ensure the profile reflects the learner's evolving capabilities.
+1. Continuously monitor the learner's progress, updating the profile based on new interactions and feedback.
+2. Adjust programming knowledge, coding skills, and style according to evolving performance.
+3. Track changes in the learner’s coding habits, identifying any improvements or regressions.
+4. If the learner’s common mistakes evolve, update the list accordingly.
 
 Chain of Thoughts for Task B:
-1. Monitor the learner's progress through exercise records.
-2. Update the programming knowledge hierarchy and corresponding coding skills based on new insights.
-3. Adjust the coding style preferences to align with the learner's evolving coding practices.
+1. Review recent interactions and exercise records to spot any changes or trends in the learner's profile.
+2. Update the knowledge hierarchy and coding skill assessment to reflect any new learning.
+3. Adjust coding style preferences to reflect any shifts in how the learner approaches coding.
+4. Update the frequent mistakes list based on any new errors or improvements.
 """
 
 adaptive_learner_profiler_basic_system_prompt_requirements = """
 **Requirements**:
-- Skill level should be one of: "beginner", "intermediate", "expert".
-- Ensure that the output captures the most critical elements of the learner's current Programming Knowledge, Coding skill and Coding style.
+- Skill level categorization: "beginner", "intermediate", or "expert".
+- Ensure the profile accurately reflects the learner's current programming knowledge, coding skills, coding style, and frequent mistakes.
+- The profile should evolve with the learner’s interactions, progress, and mistakes.
 """
 
 adaptive_learner_profiler_direct_system_prompt = adaptive_learner_profiler_system_prompt_base + adaptive_learner_profiler_basic_system_prompt_requirements
-adaptive_learner_profiler_cot_system_prompt = adaptive_learner_profiler_system_prompt_base + adaptive_learner_profiler_basic_system_prompt_task_chain_of_thoughts + adaptive_learner_profiler_basic_system_prompt_requirements
+adaptive_learner_profiler_cot_system_prompt = adaptive_learner_profiler_system_prompt_base + adaptive_learner_profiler_basic_system_prompt_task_chain_of_thoughts+ adaptive_learner_profiler_basic_system_prompt_requirements
 adaptive_learner_profiler_system_prompt = adaptive_learner_profiler_cot_system_prompt
 
 
 adaptive_learner_profiler_task_prompt_initialization = """
-Task A. Initial Learner's Programming Knowledge, Coding skill and Coding style. 
+Task A. Generate Initial Learner Profile
 
-Generate initial Programming Knowledge, Coding skill and Coding style for the learner based on the provided details:
-
-- Learner's Exercise Record: {exercise_record}
-- Learner Information: {learner_information}
+Create an initial learner profile based on the provided details, which should include programming knowledge, coding skills, coding style, and common mistakes:
+You should set all programming knowledge, coding skills, coding style a level according to the provided information.
+- Learner’s Exercise Record: {exercise_record}
 
 LEARNER_PROFILE_OUTPUT_FORMAT
 """
 adaptive_learner_profiler_task_prompt_initialization = adaptive_learner_profiler_task_prompt_initialization.replace("LEARNER_PROFILE_OUTPUT_FORMAT", cot_learner_profile_output_format_with_title)
 
 adaptive_learner_profiler_task_prompt_update = """
-Task B: Profile Update
+Task B: Update Learner Profile
 
 Update the learner’s profile based on recent interactions and new information:
 
-- Learner's Previous Programming Knowledge, Coding skill and Coding style: {learner_profile}
+- Current Learner Profile: {learner_profile}
 - New Learner Interactions: {learner_interactions}
-
 
 LEARNER_PROFILE_OUTPUT_FORMAT
 """
 adaptive_learner_profiler_task_prompt_update = adaptive_learner_profiler_task_prompt_update.replace("LEARNER_PROFILE_OUTPUT_FORMAT", cot_learner_profile_output_format_with_title)
 
+# Add the required output format for consistency
 from .basic_templetes import output_format_requirements_templete
 
 task_prompt_vars = [var_name for var_name in globals() if "task_prompt" in var_name]

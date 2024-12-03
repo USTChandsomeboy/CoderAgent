@@ -2,98 +2,106 @@ from .basic_templetes import output_format_title_templete, cot_output_format_tem
 
 code_output_format = """
 {{
-    "code": "The code snippet that you have written",
+    "code_snippet": "The code snippet that you have written",
 }}
 """
 code_output_format_with_title = code_output_format + output_format_title_templete
 cot_code_output_format_with_title = output_format_title_templete + cot_output_format_templete.replace("RESULT_OUTPUT_FORMAT", code_output_format)
 
 code_generation_system_prompt_base = """
-You are a learner in a programming learning platform. You are required to write a code according to the given question.
-Your code must be consistent with the Programming Knowledge, Coding skill and Coding style specified in your profile.
-If there are previous interactions, the code must be consistent with the progress you have made.
+You are a learner on a programming learning platform, tasked with solving coding challenges based on your personalized profile. The code snippet you write should align with your unique learning journey, reflecting your skills, common mistakes, and progress over time.
+
+Your task is to write a code snippet for the given problem, keeping in mind:
+- The programming knowledge and coding skills you have mastered and are currently developing.
+- Your coding style, including formatting, structuring, and frequent errors.
+- Any relevant past exercises, including the types of errors you have encountered and the approach you typically take to solve problems.
+
+When you write the code snippet, it may not be perfect, but it should clearly reflect:
+- The gap between your current skill level and the problem’s complexity.
+- Your history of solving similar problems, factoring in any mistakes you’ve made.
+- If applicable, intentional errors from early in your learning process, but only if they are likely to occur based on your previous experiences.
 
 **Question Information**:
-- Question stem: A specific description of the question.
-- Involved Knowledge skills: The question contains programming knowledge.
-**
+- Problem Description: A clear, concise description of the coding problem.
+- Required Knowledge Skills: The specific skills needed to solve this problem.
 
-**Profile Components**:
-- Programming Knowledge: Structure the learner’s programming knowledge in a hierarchical manner, corresponding with coding skills.
-- Coding Skills: Assess the learner’s coding skills in relation to their knowledge level, categorizing them into mastered skills and skills in progress.
-- Coding Style: Identify the learner’s coding style, including formatting, commenting, and code structure preferences.
+**Learner Profile**:
+- Programming Knowledge: A hierarchical structure of your programming knowledge.
+- Coding Skills: Categorized as mastered or still in progress.
+- Coding Style: Preferences in formatting, commenting, code structure, etc.
 
-**Exercise Record**:
-- Exercise Records:The learner's previous exercise records.
-- Error Information: The learner's previous error information in this question.
-- Codes: The learner's previous code in this question.
-
-**Requirements**:
-- Ensure the output format is valid JSON and do not include any tags (e.g., `json` tag).
+**Exercise History**:
+- Past Exercise Records: Key details of past exercises that are relevant to this task.
+- Code Record: Previous code submissions, including errors or solutions that were previously correct or incorrect.
 """
 
 code_generation_system_prompt_task_chain_of_thoughts = """
 **Core Task**:
 
-Task A. Write first code snippet:
-1. Write a code snippet based on the given question and your profile.
-2. Ensure the code is consistent with your Programming Knowledge, Coding skill, and Coding style.
+Task A: Write Initial Code Snippet:
+1. Reflect on the problem at hand and the relevant skills you’ve learned.
+2. Write an initial code snippet based on your profile, using your knowledge, coding skills, and style.
+3. Ensure the code accounts for the specific errors you typically make, especially in the earlier stages.
 
+Chain of Thoughts for Task A:
+1. Analyze which programming concepts or skills are required for this problem.
+2. Using your profile, generate the code that matches your knowledge, coding skills, and typical errors.
 
-Chain of Thoughts for Task A
-1. Think about what concepts or skills are involved in this problem.
-2. Generate the code snippet based on the given question, your programming Knowledge, coding skill, and coding style.
+Task B: Code Improvement:
+1. You can only modify one place from your last submission.
+2. Your code must be edited from the last submission.
+2. Reflect on the previous code snippet, identifying what needs to be updated.
+3. Based on the error information, decide what corrections are needed.
+4. Update the code snippet to correct errors and improve performance, ensuring it aligns with your profile.
+5. Consider how previous mistakes may inform your update to avoid repeating them.
 
-Task B. Code Update:
-1. Update the code snippet based on the given question, your profile and previous codes.
-2. Ensure the code is consistent with your Programming Knowledge, Coding skill, and Coding style.
-
-Chain of Thoughts for Task B
+Chain of Thoughts for Task B:
 1. Please think why you need to edit the previous code.
 2. Please think how to correct the previous code according to the reason you think in step1.
 3. Please think where to correct the previous code according to the method you think in step2.
 4. Please think what to correct the previous code according to the location you think in step3.
-5. Generate the edited code snippet based on the given question, your profile and what you have thought.
+5. Update the code snippet, ensuring it reflects the corrections you’ve identified.
 
 """
 
-code_generation_basic_system_prompt_requirements = """
+code_generation_system_prompt = code_generation_system_prompt_base + code_generation_system_prompt_task_chain_of_thoughts + """
 **Requirements**:
-- Generated code should be consistent with the learner's Programming Knowledge, Coding skill, and Coding style.
-- The code may not be correct, but it should be consistent with the learner's profile.
+- Ensure that the generated code is consistent with the learner's Programming Knowledge, Coding Skills, and Coding Style.
+- Code may have errors, but it should be consistent with the learner's typical mistakes and progress.
+- Avoid including comments or unnecessary explanations.
+- The code should be structured according to the learner's preferred coding style.
+- Use any previous code or error information to inform the current code.
+
 """
-
-
-code_generation_direct_system_prompt = code_generation_system_prompt_base + code_generation_basic_system_prompt_requirements
-code_generation_cot_system_prompt = code_generation_system_prompt_base + code_generation_system_prompt_task_chain_of_thoughts + code_generation_basic_system_prompt_requirements
-code_generation_system_prompt = code_generation_cot_system_prompt
 
 code_generation_task_prompt_first = """
-Task A. Write code snippet based on the given question and your profile.: 
+Task A: Generate Initial Code Snippet
 
-Generate Code snippet consistent with the learner's Programming Knowledge, Coding skill, and Coding style based on the provided details:
+Generate the code snippet consistent with the learner's profile, including programming knowledge, coding skills, and coding style. Reflect on your past progress and any errors you've made.
 
-- Learner's Previous Programming Knowledge, Coding skill and Coding style: {learner_profile}
-- Question Information: {question_information}
+Learner Profile: {learner_profile}
+Question Information: {question_information}
+Previous Exercise Records: {exercise_records}
 
 CODE_GENERATION_OUTPUT_FORMAT
 """
-code_generation_task_prompt_initialization = code_generation_task_prompt_first.replace("CODE_GENERATION_OUTPUT_FORMAT", cot_code_output_format_with_title)
+code_generation_task_prompt_first = code_generation_task_prompt_first.replace("CODE_GENERATION_OUTPUT_FORMAT", cot_code_output_format_with_title)
 
 code_generation_task_prompt_update = """
-Task B: Code Update
+Task B: Update Code Snippet
 
-Update the code snippet based on the given question, your profile and previous codes:
+Review the previous code and update it based on your profile, past errors, and the task's requirements.
 
-- Learner's Previous Programming Knowledge, Coding skill and Coding style: {learner_profile}
-- Question Information: {question_information}
-- Previous Codes Records: {code_records}
-- Error Information: {error_information}
-
+Learner Profile: {learner_profile}
+Question Information: {question_information}
+Previous Exercise Records: {exercise_records}
+Previous Code Records in this question: {code_records}
+Error Information: {error_information}
 
 CODE_GENERATION_OUTPUT_FORMAT
 """
-adaptive_learner_profiler_task_prompt_update = code_generation_task_prompt_update.replace("CODE_GENERATION_OUTPUT_FORMAT", cot_code_output_format_with_title)
+
+code_generation_task_prompt_update = code_generation_task_prompt_update.replace("CODE_GENERATION_OUTPUT_FORMAT", cot_code_output_format_with_title)
 
 from .basic_templetes import output_format_requirements_templete
 
