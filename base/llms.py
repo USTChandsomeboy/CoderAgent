@@ -4,7 +4,7 @@ import logging
 from dotenv import load_dotenv
 load_dotenv(override=True)
 
-temperature = 0.7
+temperature = 0.4
 
 
 def create_hf_llm(model_type="prometheus"):

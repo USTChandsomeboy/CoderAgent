@@ -17,6 +17,7 @@ class AbstractAgent(abc.ABC):
         # TODO: batch mode for removing tracks
         if not self.output_tracks and isinstance(output, dict) and 'tracks' in output:
             try:
+                print(output)
                 output = output['result']
             except Exception as e:
                 print(f"Failed to remove tracks from output: {e}")

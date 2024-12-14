@@ -1,5 +1,6 @@
 from base import Agent
-from prompts import code_generation_system_prompt, \
+from prompts import code_generation_system_prompt_A, \
+                    code_generation_system_prompt_B, \
                     code_generation_task_prompt_first, \
                     code_generation_task_prompt_update
                     
@@ -13,8 +14,7 @@ class CodeGeneration(Agent):
         - Learner Information: {learner_information}
         - Question Information: {question_information}
         """
-        self.set_prompts(code_generation_system_prompt, code_generation_task_prompt_first)
-        print(code_generation_system_prompt)
+        self.set_prompts(code_generation_system_prompt_A, code_generation_task_prompt_first)
         print(code_generation_task_prompt_first)
         output = self.act(input_dict)
         return output
@@ -26,7 +26,7 @@ class CodeGeneration(Agent):
         - Previous Codes Records: {code_records}
         - Error Information: {error_information}
         """
-        self.set_prompts(code_generation_system_prompt, code_generation_task_prompt_update)
+        self.set_prompts(code_generation_system_prompt_B, code_generation_task_prompt_update)
         return self.act(input_dict)
 
 
@@ -42,14 +42,14 @@ def generate_first_code_with_llm(llm, learner_profile, question_information, exe
     except Exception as e:
         raise Exception(str(e))
 
-def update_code_with_llm(llm, learner_profile, question_information, exercise_records, code_records, error_information):
+def update_code_with_llm(llm, learner_profile, question_information, exercise_records, code_record, error_information):
     code_generater = CodeGeneration(llm)
     try:
         update_code = code_generater.code_update({
             "learner_profile": learner_profile,
             "question_information": question_information,
             "exercise_records": exercise_records,
-            "code_records": code_records,
+            "code_record": code_record,
             "error_information": error_information,
         })
         return update_code

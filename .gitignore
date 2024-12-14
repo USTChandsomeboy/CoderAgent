@@ -7,5 +7,7 @@ others/
 results/
 dataset/
 
+Solution.java
+Solution.class
 nohup.out
 educational_resource_integration/chroma_db/

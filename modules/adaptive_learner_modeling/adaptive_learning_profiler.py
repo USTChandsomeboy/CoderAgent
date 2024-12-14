@@ -1,5 +1,6 @@
 from base import Agent
-from prompts import adaptive_learner_profiler_system_prompt, \
+from prompts import adaptive_learner_profiler_system_prompt_A, \
+                    adaptive_learner_profiler_system_prompt_B, \
                     adaptive_learner_profiler_task_prompt_initialization, \
                     adaptive_learner_profiler_task_prompt_update
 
@@ -14,8 +15,7 @@ class AdaptiveLearnerProfiler(Agent):
         - Exercise Record: {exercise_record}
         - Learner Information: {learner_information}
         """
-        self.set_prompts(adaptive_learner_profiler_system_prompt, adaptive_learner_profiler_task_prompt_initialization)
-        print(adaptive_learner_profiler_system_prompt)
+        self.set_prompts(adaptive_learner_profiler_system_prompt_A, adaptive_learner_profiler_task_prompt_initialization)
         output = self.act(input_dict)
         return output
 
@@ -24,7 +24,7 @@ class AdaptiveLearnerProfiler(Agent):
         - Learner's Initial Profile: {learner_profile}
         - New Learner Interactions: {learner_interactions}
         """
-        self.set_prompts(adaptive_learner_profiler_system_prompt, adaptive_learner_profiler_task_prompt_update)
+        self.set_prompts(adaptive_learner_profiler_system_prompt_B, adaptive_learner_profiler_task_prompt_update)
         return self.act(input_dict)
 
 
