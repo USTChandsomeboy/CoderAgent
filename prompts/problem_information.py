@@ -31,7 +31,7 @@ Chain of Thoughts for Task:
 problem_information_system_prompt = problem_information_system_prompt_base + problem_information_system_prompt_task_chain_of_thoughts + """
 **Requirements**:
 - Ensure that the generated knowledge and skills are consistent with the programming problem.
-
+- Skill level categorization: "beginner", "intermediate", or "expert".
 """
 
 

@@ -16,12 +16,12 @@ class QuestionAnalysis(Agent):
         return output
 
 
-def generate_first_code_with_llm(llm, question):
+def analysis_question_with_llm(llm, question):
     question_analysiser= QuestionAnalysis(llm)
     try:
-        first_code = question_analysiser.analysis_question({
+        skillrequire = question_analysiser.analysis_question({
             "question": question,
         })
-        return first_code
+        return skillrequire
     except Exception as e:
         raise Exception(str(e))

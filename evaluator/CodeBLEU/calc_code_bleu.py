@@ -5,11 +5,11 @@
 # -*- coding:utf-8 -*-
 import argparse
 import os
-# from evaluator.CodeBLEU import bleu, weighted_ngram_match, syntax_match, dataflow_match
-import bleu
-import weighted_ngram_match
-import syntax_match
-import dataflow_match
+from evaluator.CodeBLEU import bleu, weighted_ngram_match, syntax_match, dataflow_match
+# import bleu
+# import weighted_ngram_match
+# import syntax_match
+# import dataflow_match
 
 
 def get_codebleu(pre_references, hypothesis, lang, params='0.25,0.25,0.25,0.25'):
