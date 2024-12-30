@@ -1,9 +1,9 @@
 import argparse
 
 parser = argparse.ArgumentParser([])
-parser.add_argument("--dataset", choices=['train', 'test'], default='test')
+parser.add_argument("--dataset", choices=['CSEDM', 'CodeNet_Python'], default='CSEDM')
 parser.add_argument("--device", default='cuda:0')
-parser.add_argument("--repeat_times", type=int, default=5)
+parser.add_argument("--reflection", action="store_true", default=False)
 parser.add_argument("--test", action="store_true", default=False)
 
 parser.add_argument("--lr", type=float, default=1e-3)

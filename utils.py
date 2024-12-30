@@ -35,13 +35,15 @@ def save_profile(profile_file: str, user_id: str, profile: str) -> None:
     """
     if os.path.exists(profile_file):
         profile_data = pd.read_csv(profile_file)
-        if user_id in profile_data['user_id'].values:
-            profile_data.loc[profile_data['user_id'] == user_id, 'profile'] = profile
+        if user_id in list(profile_data['user_id'].values):
+            print(f"Updating profile for user {user_id}")
+            profile_data.loc[profile_data['user_id'] == user_id, 'profile'] = str(profile)
         else:
-            new_row = pd.DataFrame({'user_id': [user_id], 'profile': [profile]})
+            print(f"Adding profile for user {user_id}")
+            new_row = pd.DataFrame({'user_id': [str(user_id)], 'profile': [profile]})
             profile_data = pd.concat([profile_data, new_row], ignore_index=True)
     else:
-        profile_data = pd.DataFrame({'user_id': [user_id], 'profile': [profile]})
+        profile_data = pd.DataFrame({'user_id': [str(user_id)], 'profile': [profile]})
 
     profile_data.to_csv(profile_file, index=False)
 

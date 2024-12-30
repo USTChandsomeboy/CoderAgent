@@ -1,0 +1,1 @@
+nohup python main.py --test False --dataset CSEDM --reflection False > CSEDM_train.log 2>&1 &
