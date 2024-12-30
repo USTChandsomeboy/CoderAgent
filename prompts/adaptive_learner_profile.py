@@ -30,6 +30,7 @@ learner_profile_output_format = """
             "Sorting": ,
             "Searching": ,
             "Graph_Traversal": ,
+            ...
         }},
         "Functions": {{
             "Function_Definition": ,
@@ -102,7 +103,7 @@ adaptive_learner_profiler_basic_system_prompt_task_chain_of_thoughts_B = """
 1. Continuously monitor the learner's progress, updating the profile based on new interactions and feedback.
 2. Adjust programming knowledge, coding skills, and style according to evolving performance.
 3. Track changes in the learner’s coding habits, identifying any improvements or regressions.
-4. If the learner’s common mistakes evolve, update the list accordingly.
+4. If the learner’s common mistakes evolve, update the list accordingly.(Only if the student obviously corrects the error, the error can be removed from the list)
 
 Chain of Thoughts:
 1. Update the user's programming knowledge and coding ability based on their latest test records.

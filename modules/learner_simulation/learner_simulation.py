@@ -23,8 +23,8 @@ class CodeGeneration(Agent):
         """
         - Learner's Profile: {learner_profile}
         - Question Information: {question_information}
-        - Previous Codes Records: {code_records}
         - Error Information: {error_information}
+        - Reflection Information: {reflection}
         """
         self.set_prompts(code_generation_system_prompt_B, code_generation_task_prompt_update)
         return self.act(input_dict)
@@ -42,15 +42,15 @@ def generate_first_code_with_llm(llm, learner_profile, question_information, exe
     except Exception as e:
         raise Exception(str(e))
 
-def update_code_with_llm(llm, learner_profile, question_information, exercise_records, code_record, error_information):
+def update_code_with_llm(llm, learner_profile, question_information, code_record, error_information, reflection):
     code_generater = CodeGeneration(llm)
     try:
         update_code = code_generater.code_update({
             "learner_profile": learner_profile,
             "question_information": question_information,
-            "exercise_records": exercise_records,
             "code_record": code_record,
             "error_information": error_information,
+            "reflection": reflection
         })
         return update_code
     except Exception as e:
