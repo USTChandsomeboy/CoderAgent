@@ -17,7 +17,6 @@ class AbstractAgent(abc.ABC):
         # TODO: batch mode for removing tracks
         if not self.output_tracks and isinstance(output, dict) and 'tracks' in output:
             try:
-                print(output)
                 output = output['result']
             except Exception as e:
                 print(f"Failed to remove tracks from output: {e}")
@@ -52,6 +51,10 @@ class AbstractAgent(abc.ABC):
         output = agent.invoke(input_dict) if not batch_mode else agent.batch(input_dict)
         if not self.json_output:
             return output.content
+
+        # Output the number of tokens used
+        tokens_used = output.usage_metadata
+        # print(f"Tokens used: {tokens_used}", flush=True)
         try:
             if batch_mode:
                 output_json = [json.loads(o.content) for o in output]

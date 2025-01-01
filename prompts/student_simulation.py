@@ -1,13 +1,22 @@
 from .basic_templetes import output_format_title_templete, cot_output_format_templete
 
-code_output_format = """
+code_output_format_A = """
+{{
+    "code": "complete code",
+}}
+"""
+
+code_output_format_B = """
 {{
     "code0": "complete code fragment that will be modified next",
     "code1": "the modified code fragment",
 }}
 """
-code_output_format_with_title = code_output_format + output_format_title_templete
-cot_code_output_format_with_title = output_format_title_templete + cot_output_format_templete.replace("RESULT_OUTPUT_FORMAT", code_output_format)
+code_output_format_with_title_A = code_output_format_A + output_format_title_templete
+cot_code_output_format_with_title_A = output_format_title_templete + cot_output_format_templete.replace("RESULT_OUTPUT_FORMAT", code_output_format_A)
+
+code_output_format_with_title_B = code_output_format_B + output_format_title_templete
+cot_code_output_format_with_title_B = output_format_title_templete + cot_output_format_templete.replace("RESULT_OUTPUT_FORMAT", code_output_format_B)
 
 code_generation_system_prompt_base = """
 You are a learner on a programming learning platform, tasked with solving coding challenges based on your personalized profile. The code snippet you write should align with your unique learning journey, reflecting your skills, common mistakes, and progress over time.
@@ -88,7 +97,7 @@ Previous Exercise Records: {exercise_records}
 
 CODE_GENERATION_OUTPUT_FORMAT
 """
-code_generation_task_prompt_first = code_generation_task_prompt_first.replace("CODE_GENERATION_OUTPUT_FORMAT", cot_code_output_format_with_title)
+code_generation_task_prompt_first = code_generation_task_prompt_first.replace("CODE_GENERATION_OUTPUT_FORMAT", cot_code_output_format_with_title_A)
 
 code_generation_task_prompt_update = """
 
@@ -103,7 +112,7 @@ Reflection Information: {reflection}
 CODE_GENERATION_OUTPUT_FORMAT
 """
 
-code_generation_task_prompt_update = code_generation_task_prompt_update.replace("CODE_GENERATION_OUTPUT_FORMAT", cot_code_output_format_with_title)
+code_generation_task_prompt_update = code_generation_task_prompt_update.replace("CODE_GENERATION_OUTPUT_FORMAT", cot_code_output_format_with_title_B)
 
 from .basic_templetes import output_format_requirements_templete
 

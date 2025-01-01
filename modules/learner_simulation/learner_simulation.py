@@ -15,7 +15,6 @@ class CodeGeneration(Agent):
         - Question Information: {question_information}
         """
         self.set_prompts(code_generation_system_prompt_A, code_generation_task_prompt_first)
-        print(code_generation_task_prompt_first)
         output = self.act(input_dict)
         return output
 

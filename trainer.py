@@ -3,6 +3,7 @@ import json
 import pickle
 from tqdm import tqdm
 import torch
+# import logging
 import torch.nn.functional as F
 from torch.optim import Adam
 import numpy as np
@@ -18,7 +19,11 @@ from modules.reflection_agent import *
 from modules.ac_rate import *
 from utils import save_profile, merge_codes, compile_code, compute_code_bleu
 
-
+# logging.basicConfig(
+#     level=logging.INFO,
+#     format='%(asctime)s - %(message)s',
+#     handlers=[logging.StreamHandler(), logging.FileHandler('output.log')]
+# )
 
 def get_problem_info(problems: pd.DataFrame, problem_id: int) -> dict:
     """
@@ -62,7 +67,6 @@ def handle_reflection(
     reflection_information = analysis_question_with_llm(llm, profile, problem_info, all_records, code_record_updated)
     reflection_times = 0
     while reflection_information['judgment'] == 'No':
-        print(reflection_times)
         if reflection_times > 3:
             break
         reflection_details = {
@@ -96,6 +100,7 @@ def process_training_data(
     user_folders = [d for d in os.listdir(metadata_folder) if os.path.isdir(os.path.join(metadata_folder, d))]
 
     for user_id in tqdm(user_folders, desc="Processing users"):
+        print(f"Processing user: {user_id}", flush=True)
         user_folder_path = os.path.join(metadata_folder, user_id)
         for filename in os.listdir(user_folder_path):
             match = re.search(r'(\d+)', filename)
@@ -148,16 +153,19 @@ def process_test_data(
             match = re.search(r'(\d+)', filename)
             problem_id = int(match.group(1)) if match else 1
 
-            filepath = os.path.join(metadata_folder, filename)
+            filepath = os.path.join(user_folder_path, filename)
             code_records = pd.read_csv(filepath)
 
             problem_info = get_problem_info(problems, problem_id)
             merged_code = merge_codes(code_records['Code'].tolist())
             last_record = f"Problem information: {problem_info}\nCode records:\n{merged_code}"
-
+            first_code_gen = generate_first_code_with_llm(llm, profile, problem_info, exercise_records)
+            code_record_updated = first_code_gen['code']
+            gen_codes.append(code_record_updated)
+            ref_codes.append(code_records['Code'][0])
             all_records = [f"1-th submission code:\n{code_records['Code'][0]}"]
             err_info = compile_code(code_records['Code'][0], 'java')
-
+            
             for j in range(1, len(code_records['Code'])):
                 ref_codes.append(code_records['Code'][j])
                 code_update = update_code_with_llm(
@@ -178,7 +186,7 @@ def process_test_data(
             pre_scores.append(pre_score)
             profile = update_learner_profile_with_llm(llm, profile, merged_code)
 
-            output_file = f'results/experiments/output_code_{problem_id}.txt'
+            output_file = f'results/experiments/output_code_{user_id}_{problem_id}.txt'
             os.makedirs(os.path.dirname(output_file), exist_ok=True)
             with open(output_file, 'w') as f:
                 for record in all_records:
@@ -187,6 +195,7 @@ def process_test_data(
             if exercise_records:
                 exercise_records.pop(0)
             exercise_records.append(last_record)
+        break
 
     codebleu_score, detailed_codebleu_score = compute_code_bleu(ref_codes, gen_codes, lang='java')
     print(f"CodeBLEU Score: {codebleu_score}")
