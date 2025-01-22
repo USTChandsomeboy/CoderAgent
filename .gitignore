@@ -6,7 +6,9 @@ data/
 others/
 results/
 dataset/
+simulation/
 
+.env
 Solution.java
 Solution.class
 nohup.out
