@@ -29,12 +29,13 @@ class CodeGeneration(Agent):
         return self.act(input_dict)
 
 
-def generate_first_code_with_llm(llm, learner_profile, question_information, exercise_records):
+def generate_first_code_with_llm(llm, learner_profile, question_information, language, exercise_records):
     code_generater= CodeGeneration(llm)
     try:
         first_code = code_generater.generate_first_code({
             "learner_profile": learner_profile,
             "question_information": question_information,
+            "language": language,
             "exercise_records": exercise_records,
         })
         return first_code

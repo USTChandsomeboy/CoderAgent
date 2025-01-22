@@ -17,6 +17,7 @@ class AbstractAgent(abc.ABC):
         # TODO: batch mode for removing tracks
         if not self.output_tracks and isinstance(output, dict) and 'tracks' in output:
             try:
+                # print(output, flush=True)
                 output = output['result']
             except Exception as e:
                 print(f"Failed to remove tracks from output: {e}")
@@ -65,7 +66,16 @@ class AbstractAgent(abc.ABC):
         except json.JSONDecodeError:
             print(f"Failed to decode JSON response:\n{output.content}")
             # raise Exception(f"Failed to decode JSON response: \n{output.content}")
-            return None
+            try:
+                output_str = self.fix_json_string(output.content)
+                output_str = output_str.replace("\\'", "\'").replace("\\r", "\r").replace("\\t", "\t").replace("\\n", "\n")
+                output_json = json.loads(output_str)
+                return output_json
+            except:
+                output_str = self.fix_json_string(output.content)
+                output_str = output_str.replace("\\'", "\'").replace("\\r", "\r").replace("\\t", "\t").replace("\\n", "\n")
+                print(f"Failed to decode JSON response2:\n{output_str}")
+                return None
         return output_json
 
 

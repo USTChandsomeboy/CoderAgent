@@ -2,28 +2,30 @@ from .basic_templetes import output_format_title_templete, cot_output_format_tem
 
 ac_rate_output_format = """
 {{
-    "score": 0 or 1,
+    "score": 0 ~ 1,
 }}
 """
 ac_rate_output_format_with_title = ac_rate_output_format + output_format_title_templete
 cot_ac_rate_output_format_with_title = ac_rate_output_format + cot_output_format_templete.replace("RESULT_OUTPUT_FORMAT", ac_rate_output_format_with_title)
 
 ac_rate_system_prompt_base = """
-You are the Evaluation Agent in a programming learning platform. Your task is to evaluate the student's code and determine if it is correct (AC) or not."""
+You are the code educator in a programming learning platform. Your task is to predict whether the student will get correct (AC) or not."""
 
 ac_rate_system_prompt_task_chain_of_thoughts = """
 **Core Task**:
 
-Task: Evaluate the student's code and determine whether it is correct (AC) or not.
+Task: Predict whether the student will get correct (AC) or not.
 
+Chain of Thoughts for Task:
+1. Analyze the code records and the problem statement.
+2. You need to consider whether the student's problem-solving approach throughout the entire process is correct. If yes, the student will get AC; otherwise, the student will not get AC.
 
 
 """
 
 ac_rate_system_prompt = ac_rate_system_prompt_base + ac_rate_system_prompt_task_chain_of_thoughts + """
 **Requirements**:
-- Ensure that the evaluation is accurate and consistent with the problem statement.
-- The result should be either 0 (incorrect) or 1 (correct).
+- The result should between 0 and 1.
 """
 
 
@@ -31,7 +33,7 @@ ac_rate_task_prompt = """
 
 
 Problem Stem: {question}
-Student's Code: {code}
+Student's Code Records: {code}
 
 
 CODE_GENERATION_OUTPUT_FORMAT

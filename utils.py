@@ -85,7 +85,26 @@ def compile_code(code: str, language: str) -> str:
         str: Compilation result or error message.
     """
     if language.lower() == 'python':
-        return code
+        temp_filename = "python_solution.py"
+        with open(temp_filename, 'w', encoding='utf-8') as f:
+            f.write(code)
+        try:
+            compile_process = subprocess.run(
+                ["python", temp_filename],
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            if compile_process.stderr != '':
+                return compile_process.stderr
+            return "There is no compilation error."
+        except:
+            try:
+                compile(code, "filename", "exec")
+                return ''
+            except Exception as e:
+                return str(e)
+
     elif language.lower() == 'java':
         class_name = "Solution"
         wrapped_code = f"public class {class_name} {{\n{code}\n}}"
