@@ -184,13 +184,9 @@ def process_test_data(
                     code_update = update_code_with_llm(
                         llm, profile, problem_info, all_records, err_info, ''
                     )
-                    # print("pre_code: ",code_records['Code'][j - 1])
                     code_record_updated = code_records['Code'][j - 1].replace(code_update['code0'], code_update['code1'])
-                    # print("update_code1: ",code_record_updated)
                     if code_records['Code'][j - 1] == code_record_updated:
-                        # print("No update")
                         code_record_updated = code_update['code']
-                    # print("update_code2: ",code_record_updated)
                     if use_reflection:
                         code_record_updated = handle_reflection(
                             llm, profile, problem_info, all_records, code_record_updated, err_info
@@ -204,27 +200,18 @@ def process_test_data(
                     else:
                         pre_score = code_update['score']
                         pre_scores.append(int(pre_score))
-                    # result = evaluate_with_llm(llm, code_records['Code'][j - 1], code_record_updated, code_records['Code'][j])
-                    # ideas.append(result['idea'])
-                    # positions.append(result['position'])
+                    result = evaluate_with_llm(llm, code_records['Code'][j - 1], code_record_updated, code_records['Code'][j])
+                    ideas.append(result['idea'])
+                    positions.append(result['position'])
                     real_scores.append(code_records['Score'][j])
                     ref_codes.append(code_records['Code'][j])
                     gen_codes.append(code_record_updated)
                     err_info = compile_code(code_records['Code'][j], language)
                     all_records.append(f"{j + 1}-th submission code:\n{code_records['Code'][j]}")
                 all_lengths.append(len(code_records['Code']))
-                # print(pre_scores,flush=True)
-                # print(real_scores,flush=True)
                 merged_code = merge_codes(code_records['Code'].tolist())
                 last_record = f"Problem information: {problem_info}\nCode records:\n{merged_code}"
                 
-                # profile = update_learner_profile_with_llm(llm, profile, merged_code)
-
-                # output_file = f'results/experiments/{user_id}/output_code_{problem_id}.txt'
-                # os.makedirs(os.path.dirname(output_file), exist_ok=True)
-                # with open(output_file, 'w') as f:
-                #     for record in all_records:
-                #         f.write(record + '\n')
                 
                 if exercise_records:
                     exercise_records.pop(0)
@@ -232,9 +219,6 @@ def process_test_data(
             except Exception as e:
                 print("Failed to process problem: ", e)
                 continue
-        i+=1
-        if i >= 30:
-            break
     # Calculate accuracy
     accuracy = accuracy_score(real_scores, pre_scores)
     print(f"Accuracy: {accuracy}")
@@ -242,9 +226,9 @@ def process_test_data(
     # Calculate AUC
     auc = roc_auc_score(real_scores, pre_scores)
     print(f"AUC: {auc}")
-    # Calculate F1-score
-    f1 = f1_score(real_scores, pre_scores, average='weighted')
-    print(f"F1 Score: {f1}")
+    # # Calculate F1-score
+    # f1 = f1_score(real_scores, pre_scores, average='weighted')
+    # print(f"F1 Score: {f1}")
     with open(f'code_bleu_results_{language}_{model_type}.json', 'w') as f:
         json.dump({
             'ground_truth_codes': ref_codes,
@@ -257,4 +241,4 @@ def process_test_data(
     codebleu_score, detailed_codebleu_score = compute_code_bleu(ref_codes, gen_codes, lang=language)
     print(f"CodeBLEU Score: {codebleu_score}")
     print(f"Detailed CodeBLEU Score: {detailed_codebleu_score}")
-    # print(f"idea acc: {sum(ideas)/len(ideas)}, position acc: {sum(positions)/len(positions)}")
+    print(f"idea acc: {sum(ideas)/len(ideas)}, position acc: {sum(positions)/len(positions)}")
